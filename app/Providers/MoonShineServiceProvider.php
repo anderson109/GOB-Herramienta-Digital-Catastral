@@ -12,15 +12,17 @@ use App\MoonShine\Resources\MunicipioResource;
 use App\MoonShine\Resources\SocioCulturalResource;
 use App\MoonShine\Resources\SocioEconomicoResource;
 use MoonShine\Providers\MoonShineApplicationServiceProvider;
-use MoonShine\MoonShine;
+use MoonShine\MoonShineRequest;
+
 use MoonShine\Menu\MenuGroup;
 use MoonShine\Menu\MenuItem;
-use MoonShine\Resources\MoonShineUserResource;
-use MoonShine\Resources\MoonShineUserRoleResource;
+use App\MoonShine\Resources\MoonShineUserResource;
+use App\MoonShine\Resources\MoonShineUserRoleResource;
 use MoonShine\Contracts\Resources\ResourceContract;
 use MoonShine\Menu\MenuElement;
 use MoonShine\Pages\Page;
 use Closure;
+
 
 class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
 {
@@ -61,7 +63,10 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                     static fn() => __('moonshine::ui.resource.role_title'),
                     new MoonShineUserRoleResource()
                 ),
-            ]),
+            ])->canSee(function (MoonShineRequest $request) {
+                return $request->user('moonshine')?->moonshineUserRole->name === 'Admin';
+            }),
+            
 
                 MenuItem::make('Clave Catastral', 'https://www.e.cnr.gob.sv/ClaveCatastral/')
                 ->badge(fn() => 'Check')
@@ -70,6 +75,10 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                 MenuItem::make('eCarto', 'https://mapa.elsalvadormaps.sv/cnr/map/4')
                 ->badge(fn() => 'Check')
                 ->blank(),
+                
+            
+          
+            
 
 
                 MenuItem::make('Departamento', new DepartamentoResource)->icon('heroicons.map'),

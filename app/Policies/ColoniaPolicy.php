@@ -14,7 +14,7 @@ class ColoniaPolicy
 
     public function viewAny(MoonshineUser $user): bool
     {
-        return true;
+        return $user->isSuperUser();
     }
 
     public function view(MoonshineUser $user, Colonia $item): bool
